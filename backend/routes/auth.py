@@ -26,6 +26,8 @@ async def login(email: str, password: str):
 
     if not bcrypt.checkpw(password.encode("utf-8"), user["password"]):
         raise HTTPException(status_code=400, detail="Invalid credentials")
+    # Set email as a cookie
+        response.set_cookie(key="user_email", value=email, max_age=1800)  # 30 minutes
 
     return {"message": "Login successful", "user": user}
 
@@ -35,6 +37,8 @@ async def login(email: str, password: str):
     print(user)
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
+        # Set email as a cookie
+        response.set_cookie(key="guard_email", value=email, max_age=1800)  # 30 minutes
 
     if not bcrypt.checkpw(password.encode("utf-8"), user["password"]):
         raise HTTPException(status_code=400, detail="Invalid credentials")
