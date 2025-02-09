@@ -1,18 +1,24 @@
 from fastapi import APIRouter, HTTPException
+from pydantic import BaseModel
 from models.user import User
 from models.guardian import Guardian
 import bcrypt
 
 router = APIRouter()
+class Signup(BaseModel):
+    username: str
+    phone: str
+    age: int
+    email: str
+    password: str
+    guardian_name: str
+    guardian_phone: str
+    guardian_email: str
 
 @router.post("/signup")
-async def signup(username: str, phone: str, age: int, email: str, password: str, guardian_name: str, guardian_phone: str, guardian_email: str):
-    # Create Guardian
-    # guardian = Guardian(guardian_name, guardian_phone, guardian_email)
-    # guardian_data = guardian.save()
-
+async def signup(signup_data : Signup):
     # Create User
-    user = User(username, phone, age, email, password, guardian_name, guardian_phone, guardian_email)
+    user = User(signup_data.username, signup_data.phone, signup_data.age, signup_data.email, signup_data.password, signup_data.guardian_name, signup_data.guardian_phone, signup_data.guardian_email)
     user.save()
 
     return {"message": "User created successfully"}
